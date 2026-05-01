@@ -20,6 +20,7 @@ set scrolloff=4
 set sidescrolloff=8
 set confirm
 set shiftround
+set nofoldenable
 
 " UI
 set number
@@ -87,7 +88,7 @@ augroup local_python
   autocmd!
   autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4
   autocmd FileType python setlocal textwidth=100 colorcolumn=100
-  autocmd FileType python setlocal foldmethod=indent foldlevelstart=99
+  autocmd FileType python setlocal foldmethod=manual nofoldenable
   autocmd FileType python setlocal formatoptions-=t
   autocmd FileType python setlocal omnifunc=python3complete#Complete
 augroup END
