@@ -1,0 +1,98 @@
+" Local Vim defaults. Repo-specific OpenAI Python tooling lives in
+" ~/.vim/openai-python.vim and is only activated for /root/code/openai.
+
+set nocompatible
+filetype plugin indent on
+syntax enable
+
+let mapleader = " "
+
+" Editing behavior
+set hidden
+set autoread
+set mouse=a
+set updatetime=300
+set timeoutlen=500
+set backspace=indent,eol,start
+set splitbelow
+set splitright
+set scrolloff=4
+set sidescrolloff=8
+set confirm
+set shiftround
+
+" UI
+set number
+set relativenumber
+set ruler
+set showcmd
+set laststatus=2
+set signcolumn=yes
+set cursorline
+set colorcolumn=100
+set list
+set listchars=tab:>-,trail:.,extends:>,precedes:<,nbsp:+
+set wildmenu
+set wildmode=longest:full,full
+set completeopt=menuone,noinsert,noselect
+set pumheight=12
+set shortmess+=c
+
+" Search
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+nnoremap <silent> <leader><space> :nohlsearch<CR>
+
+" Indentation defaults
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+
+" Persistent local state
+set undofile
+set undodir=~/.vim/undo//
+set directory=~/.vim/swap//
+set backupdir=~/.vim/backup//
+set viminfo+=n~/.vim/viminfo
+
+" Keep completion/search practical in large repos.
+set wildignore+=*.pyc,*.pyo,*.so,*.o,*.a,*.class
+set wildignore+=.git/**,.hg/**,.svn/**
+set wildignore+=bazel-*/**,bazel-bin/**,bazel-out/**,bazel-testlogs/**
+set wildignore+=node_modules/**,.venv/**,venv/**,__pycache__/**
+
+if executable("rg")
+  set grepprg=rg\ --vimgrep\ --smart-case\ --hidden\ --glob\ !.git\ --glob\ !bazel-*
+  set grepformat=%f:%l:%c:%m
+endif
+
+" Quickfix navigation
+nnoremap <silent> ]q :cnext<CR>
+nnoremap <silent> [q :cprevious<CR>
+nnoremap <silent> <leader>qo :copen<CR>
+nnoremap <silent> <leader>qc :cclose<CR>
+nnoremap <silent> <leader>l :lopen<CR>
+
+" Lightweight statusline that works without plugins.
+set statusline=%f\ %m%r%h%w
+set statusline+=%=
+set statusline+=[%{&filetype}]
+set statusline+=\ %l:%c\ %p%%
+
+" Python defaults outside repo-specific setup too.
+augroup local_python
+  autocmd!
+  autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4
+  autocmd FileType python setlocal textwidth=100 colorcolumn=100
+  autocmd FileType python setlocal foldmethod=indent foldlevelstart=99
+  autocmd FileType python setlocal formatoptions-=t
+  autocmd FileType python setlocal omnifunc=python3complete#Complete
+augroup END
+
+let s:openai_vim = expand("~/.vim/openai-python.vim")
+if filereadable(s:openai_vim)
+  execute "source " . fnameescape(s:openai_vim)
+endif
